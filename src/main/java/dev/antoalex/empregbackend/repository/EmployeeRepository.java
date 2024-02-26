@@ -11,4 +11,5 @@ public interface EmployeeRepository extends MongoRepository<Employee, ObjectId> 
     public Optional<Employee> findByEmpId(Integer empId);
 
 
+    public String findNameByEmpId(Integer empId);
 }
