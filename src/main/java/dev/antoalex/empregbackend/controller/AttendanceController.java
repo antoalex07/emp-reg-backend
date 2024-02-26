@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -21,9 +25,11 @@ public class AttendanceController {
     private AttendanceService attendanceService;
 
     @GetMapping("/{date}")
-    public ResponseEntity<List<AttendanceDto>> fetchAttendance(@PathVariable Date date){
+    public ResponseEntity<List<AttendanceDto>> fetchAttendance(@PathVariable String date) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+        Date day = format.parse(date);
         return new ResponseEntity<List<AttendanceDto>>(
-                attendanceService.fetchAttendance(date), HttpStatus.OK
+                attendanceService.fetchAttendance(day), HttpStatus.OK
         );
     }
 }
