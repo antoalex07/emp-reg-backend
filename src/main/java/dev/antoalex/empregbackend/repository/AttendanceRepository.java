@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface AttendanceRepository extends MongoRepository<Attendance, ObjectId> {
     public List<Attendance> findAllByDate(Date date);
+
+    public List<Integer> findEmpIdByDate(Date day);
 }

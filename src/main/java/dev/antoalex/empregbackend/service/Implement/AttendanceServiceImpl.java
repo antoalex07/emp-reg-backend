@@ -2,10 +2,12 @@ package dev.antoalex.empregbackend.service.Implement;
 
 import dev.antoalex.empregbackend.dto.AttendanceDto;
 import dev.antoalex.empregbackend.model.Attendance;
+import dev.antoalex.empregbackend.model.Employee;
 import dev.antoalex.empregbackend.repository.AttendanceRepository;
 import dev.antoalex.empregbackend.repository.EmployeeRepository;
 import dev.antoalex.empregbackend.service.AttendanceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +27,35 @@ public class AttendanceServiceImpl implements AttendanceService {
     public List<AttendanceDto> fetchAttendance(Date date) {
         List<Attendance> attendances = attendanceRepository.findAllByDate(date);
         return mapToDto(attendances);
+    }
+
+    @Override
+    public Attendance createAttendance(Attendance attendance) {
+
+        Employee employee = employeeRepository.findByEmpId(attendance.getEmpId()).get();
+        employee.getAttendances().add(attendance);
+        employeeRepository.save(employee);
+
+        return attendanceRepository.save(attendance);
+    }
+
+    @Override
+    public List<Integer> getEmployeeIds(Date day) {
+        List<Integer> attIds = attendanceRepository.findEmpIdByDate(day);
+        List<Integer> empIds = employeeRepository.findEmpId();
+
+        return empIds;
+        //return findRemainingIds(attIds, empIds);
+    }
+
+    private List<Integer> findRemainingIds(List<Integer> attIds, List<Integer> empIds) {
+        List<Integer> result = new ArrayList<>();
+        for (Integer attId : attIds) {
+            if (!(empIds.contains(attId))) {
+                result.add(attId);
+            }
+        }
+        return result;
     }
 
     private List<AttendanceDto> mapToDto(List<Attendance> attendances){
