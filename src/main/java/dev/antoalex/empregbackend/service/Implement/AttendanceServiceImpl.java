@@ -41,18 +41,25 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public List<Integer> getEmployeeIds(Date day) {
-        List<Integer> attIds = attendanceRepository.findEmpIdByDate(day);
-        List<Integer> empIds = employeeRepository.findEmpId();
 
-        return empIds;
-        //return findRemainingIds(attIds, empIds);
+        List<Integer> attIds = attendanceRepository.findEmpIdByDate(day);
+
+        return findRemainingIds(attIds);
     }
 
-    private List<Integer> findRemainingIds(List<Integer> attIds, List<Integer> empIds) {
+    private List<Integer> findRemainingIds(List<Integer> attIds) {
+
+        List<Employee> employees = employeeRepository.findAll();
+
+        List<Integer> empIds = new ArrayList<>();
+        for(Employee emp: employees){
+            empIds.add(emp.getEmpId());
+        }
+
         List<Integer> result = new ArrayList<>();
-        for (Integer attId : attIds) {
-            if (!(empIds.contains(attId))) {
-                result.add(attId);
+        for (Integer empId : empIds) {
+            if (!(attIds.contains(empId))) {
+                result.add(empId);
             }
         }
         return result;
