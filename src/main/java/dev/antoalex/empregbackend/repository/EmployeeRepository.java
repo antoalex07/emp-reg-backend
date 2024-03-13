@@ -14,6 +14,8 @@ public interface EmployeeRepository extends MongoRepository<Employee, ObjectId> 
 
     public String findNameByEmpId(Integer empId);
 
+    public Boolean existsByEmpId(Integer empId);
+
 //    @Query("db.employee.find({ }, { empId: 1, _id: 0 })")
 //    public List<Integer> findEmpId();
 }

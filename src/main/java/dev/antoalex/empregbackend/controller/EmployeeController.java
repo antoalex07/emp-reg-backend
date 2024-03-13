@@ -20,8 +20,8 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getEmployees(){
-        return new ResponseEntity<List<Employee>>(
+    public ResponseEntity<List<EmployeeDto>> getEmployees(){
+        return new ResponseEntity<List<EmployeeDto>>(
                 employeeService.getEmployees(), HttpStatus.OK
         );
     }
@@ -37,6 +37,13 @@ public class EmployeeController {
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody EmployeeDto employeeDto){
         return new ResponseEntity<Employee>(
                 employeeService.createEmployee(employeeDto), HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/check/{empId}")
+    public ResponseEntity<Boolean> checkEmployeeExistence(@PathVariable Integer empId){
+        return new ResponseEntity<Boolean>(
+                employeeService.checkEmployeeExistence(empId), HttpStatus.OK
         );
     }
 }
