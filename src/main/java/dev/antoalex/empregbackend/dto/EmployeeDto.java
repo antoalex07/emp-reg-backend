@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmployeeDto {
 
-    private Integer empId;
+    private Integer id;
     private String name;
     private Integer wageRate;
     private Integer overtimeRate;

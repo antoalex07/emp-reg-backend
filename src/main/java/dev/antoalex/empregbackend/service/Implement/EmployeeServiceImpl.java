@@ -50,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private Employee mapToEntity(EmployeeDto employeeDto){
         Employee employee = new Employee();
 
-        employee.setEmpId(employeeDto.getEmpId());
+        employee.setEmpId(employeeDto.getId());
         employee.setName(employeeDto.getName());
         employee.setWageRate(employeeDto.getWageRate());
         employee.setOvertimeRate(employeeDto.getOvertimeRate());
@@ -63,7 +63,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         EmployeeDto employeeDto = new EmployeeDto();
 
-        employeeDto.setEmpId(employee.getEmpId());
+        employeeDto.setId(employee.getEmpId());
         employeeDto.setName(employee.getName());
         employeeDto.setWageRate(employee.getWageRate());
         employeeDto.setOvertimeRate(employee.getOvertimeRate());
