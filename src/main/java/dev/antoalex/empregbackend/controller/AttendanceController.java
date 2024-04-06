@@ -31,7 +31,7 @@ public class AttendanceController {
 
     @GetMapping("/{date}")
     public ResponseEntity<List<AttendanceDto>> fetchAttendance(@PathVariable String date) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date day = format.parse(date);
         return new ResponseEntity<List<AttendanceDto>>(
                 attendanceService.fetchAttendance(day), HttpStatus.OK
@@ -40,7 +40,7 @@ public class AttendanceController {
 
     @GetMapping("/getIds/{date}")
     public ResponseEntity<List<Integer>> getEmployeeIds(@PathVariable String date) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date day = format.parse(date);
         return new ResponseEntity<List<Integer>>(
                 attendanceService.getEmployeeIds(day), HttpStatus.OK
