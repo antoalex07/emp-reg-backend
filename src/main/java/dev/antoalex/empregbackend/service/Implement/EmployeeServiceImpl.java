@@ -1,6 +1,7 @@
 package dev.antoalex.empregbackend.service.Implement;
 
 import dev.antoalex.empregbackend.dto.EmployeeDto;
+import dev.antoalex.empregbackend.model.Attendance;
 import dev.antoalex.empregbackend.model.Employee;
 import dev.antoalex.empregbackend.repository.EmployeeRepository;
 import dev.antoalex.empregbackend.service.EmployeeService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +35,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Optional<Employee> getEmployee(Integer empId) {
-        return employeeRepository.findByEmpId(empId);
+        Employee employee =  employeeRepository.findByEmpId(empId).get();
+        List<Attendance> attendances = employee.getAttendances();
+        insertionSort(attendances, attendances.size());
+        employee.setAttendances(attendances);
+
+        return Optional.of(employeeRepository.save(employee));
+    }
+
+    private void insertionSort(List<Attendance> attendances, int size) {
+        if(size <= 1){
+            return;
+        }
+        insertionSort(attendances, size - 1);
+
+        Attendance last = attendances.get(size - 1);
+        int j = size - 2;
+
+        while(j >= 0 && attendances.get(j).getDate().after(last.getDate())){
+            Collections.swap(attendances, j + 1, j);
+            j--;
+        }
     }
 
     @Override
