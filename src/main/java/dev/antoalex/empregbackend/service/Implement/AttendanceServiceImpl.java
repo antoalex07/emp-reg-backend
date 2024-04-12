@@ -28,14 +28,17 @@ public class AttendanceServiceImpl implements AttendanceService {
         return mapToDto(attendances);
     }
 
+
     @Override
-    public Attendance createAttendance(Attendance attendance) {
+    public Attendance createAttendance(Attendance tempAttendance) {
 
-        Employee employee = employeeRepository.findByEmpId(attendance.getEmpId()).get();
-        employee.getAttendances().add(attendance);
-        employeeRepository.save(employee);
+        Attendance attendance = mapToEntity(tempAttendance);
 
-        return attendanceRepository.save(attendance);
+        attendanceRepository.save(attendance);
+
+        mapToEmployee(attendance, attendance.getEmpId());
+
+        return attendance;
     }
 
     @Override
@@ -46,22 +49,16 @@ public class AttendanceServiceImpl implements AttendanceService {
         return findRemainingIds(attIds);
     }
 
-    private List<Integer> findRemainingIds(List<Integer> attIds) {
+    private Attendance mapToEntity(Attendance tempAttendance) {
+        Attendance attendance = new Attendance();
 
-        List<Employee> employees = employeeRepository.findAll();
+        attendance.setEmpId(tempAttendance.getEmpId());
+        attendance.setDate(tempAttendance.getDate());
+        attendance.setWork(tempAttendance.getWork());
+        attendance.setOvertime(tempAttendance.getOvertime());
+        attendance.setAdvance(tempAttendance.getAdvance());
 
-        List<Integer> empIds = new ArrayList<>();
-        for(Employee emp: employees){
-            empIds.add(emp.getEmpId());
-        }
-
-        List<Integer> result = new ArrayList<>();
-        for (Integer empId : empIds) {
-            if (!(attIds.contains(empId))) {
-                result.add(empId);
-            }
-        }
-        return result;
+        return attendance;
     }
 
     private List<AttendanceDto> mapToDto(List<Attendance> attendances){
@@ -85,5 +82,31 @@ public class AttendanceServiceImpl implements AttendanceService {
             attendanceDtos.add(attendanceDto);
         }
         return attendanceDtos;
+    }
+
+    private void mapToEmployee(Attendance attendance, Integer empId) {
+        Employee employee = employeeRepository.findByEmpId(empId).get();
+        List<Attendance> attendances = employee.getAttendances();
+        attendances.add(attendance);
+        employee.setAttendances(attendances);
+        employeeRepository.save(employee);
+    }
+
+    private List<Integer> findRemainingIds(List<Integer> attIds) {
+
+        List<Employee> employees = employeeRepository.findAll();
+
+        List<Integer> empIds = new ArrayList<>();
+        for(Employee emp: employees){
+            empIds.add(emp.getEmpId());
+        }
+
+        List<Integer> result = new ArrayList<>();
+        for (Integer empId : empIds) {
+            if (!(attIds.contains(empId))) {
+                result.add(empId);
+            }
+        }
+        return result;
     }
 }
